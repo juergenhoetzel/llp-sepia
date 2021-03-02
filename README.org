@@ -1,0 +1,5 @@
+#+title: Sepia example from low level programming book
+
+* Sepia example from [[https://www.apress.com/gp/book/9781484224021][Low-Level Programming book]]
+
+* TODO MMX/AVM-Code
