@@ -1,10 +1,14 @@
+#include "sepia.h"
+
 static const float c[3][3] = {{.393f, .769f, .189f}, {.349f, .686f, .168f}, {.272f, .543f, .131f}};
 
-static unsigned char sat(u_int64_t x) { return x < 256 ? x : 255; }
+static unsigned char sat(uint64_t x) { return x < 256 ? x : 255; }
 
-static void sepia_one(bmp_pixel *const pixel) {
-  bmp_pixel old = *pixel;
-  pixel->red = sat(old.red * c[0][0] + old.green * c[0][1] + old.blue * c[0][2]);
-  pixel->green = sat(old.red * c[1][0] + old.green * c[1][1] + old.blue * c[1][2]);
-  pixel->blue = sat(old.red * c[2][0] + old.green * c[2][1] + old.blue * c[2][2]);
+size_t sepia_one(void const *pixels) {
+  rgb *inp = (rgb *)pixels;
+  rgb old = *inp;
+  inp->r = sat(old.r * c[0][0] + old.g * c[0][1] + old.b * c[0][2]);
+  inp->g = sat(old.r * c[1][0] + old.g * c[1][1] + old.b * c[1][2]);
+  inp->b = sat(old.r * c[2][0] + old.g * c[2][1] + old.b * c[2][2]);
+  return 1;
 }

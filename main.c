@@ -41,8 +41,8 @@ int main(int argc, char **argv) {
   };
   SDL_LockSurface(image);
   rgb *pixels = (rgb *)image->pixels;
-  for (int i = 0; i < image->w * image->h; i++) {
-    sepia_one(pixels + i);
+  for (int i = 0; i < image->w * image->h;) {
+    i += sepia_one(pixels + i);
   }
   SDL_UnlockSurface(image);
   printf("Width:%d, Height:%d\n", image->w, image->h);
