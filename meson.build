@@ -16,5 +16,5 @@ asm_gen = generator(nasm,
 add_global_arguments(language : 'c')
 sdl2 = dependency('SDL2')
 executable('sepia', 'main.c', 'sepia.c', dependencies: sdl2)
-executable('sepia_mmx', 'main.c',  asm_gen.process('sepia.asm'), dependencies: sdl2)
+executable('sepia_mmx', 'main.c', 'asm_util.c', asm_gen.process('sepia.asm'), dependencies: sdl2)
 
