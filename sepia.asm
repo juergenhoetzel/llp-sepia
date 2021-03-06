@@ -25,9 +25,9 @@ sepia_one:
 	CVTDQ2PS xmm1, [rbp-32]
 	CVTDQ2PS xmm2, [rbp-16]
 
-	MOVAPS xmm3, [rel col1]
-	MOVAPS xmm4, [rel col2]
-	MOVAPS xmm5, [rel col3]
+	MOVAPS xmm3, [rbx]
+	MOVAPS xmm4, [rbx+16]
+	MOVAPS xmm5, [rbx+32]
 
 	mulps xmm0, xmm3
 	mulps xmm1, xmm4
