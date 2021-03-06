@@ -18,6 +18,7 @@ cols:
 	dd 0.272,0.393,0.349,0.272	;round 3
 	dd 0.543,0.769,0.686,0.543
 	dd 0.131,0.189,0.168,0.131
+cols_end:
 section .text
 
 sepia_one:
@@ -27,7 +28,9 @@ sepia_one:
 	mov rsi, rbp
 	sub rsi, 48
 	lea rbx, [rel cols]
+	lea rcx, [rel cols_end]
 loop:
+	push rcx
 	push rdi
 	push rsi
 	call convert_to_b4g4r4
@@ -54,11 +57,22 @@ loop:
 	CVTPS2DQ xmm0, xmm0
 	pop rsi
 	pop rdi
+	push rdi
+	push rsi
 	xchg rsi, rdi
 	movdqa [rdi], xmm0
 	call convert_from_b4g4r4
-	;; FIXME: ignore 3/4 pixels
-	mov rax, 0x16
+	pop rsi
+	pop rdi
+	pop rcx
+	;; next source
+	add rdi, 4
+	;; next sepia cols
+	add rbx, 16*3
+	cmp rbx, rcx
+	jne loop
+
+	mov rax, 0x4
 	leave
 	ret
 
