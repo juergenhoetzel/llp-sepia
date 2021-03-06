@@ -19,6 +19,8 @@ cols:
 	dd 0.543,0.769,0.686,0.543
 	dd 0.131,0.189,0.168,0.131
 cols_end:
+saturation:
+	dd 255.0,255.0,255.0,255.0
 section .text
 
 sepia_one:
@@ -29,6 +31,7 @@ sepia_one:
 	sub rsi, 48
 	lea rbx, [rel cols]
 	lea rcx, [rel cols_end]
+	MOVAPS xmm6, [rel saturation]
 loop:
 	push rcx
 	push rdi
@@ -53,7 +56,7 @@ loop:
 	addps xmm0, xmm3
 	;; xmm0 = b1|g1|r1|b2
 	;; FIXME saturatio
-
+	minps xmm0, xmm6
 	CVTPS2DQ xmm0, xmm0
 	pop rsi
 	pop rdi
