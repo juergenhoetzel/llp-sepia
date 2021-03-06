@@ -13,14 +13,17 @@ section .text
 
 sepia_one:
 	push rbp
-	mov rbp, rsp
-	sub rsp, 512		;FIXME How many
+	mov rbp,rsp
+	sub rsp, 96
 	mov rsi, rbp
-	sub rsi, 512
+	sub rsi, 48
+	push rdi
+	push rsi
 	call convert_to_b4g4r4
-	CVTDQ2PS xmm0, [rsi]
-	CVTDQ2PS xmm1, [rsi-16]
-	CVTDQ2PS xmm2, [rsi-32]
+
+	CVTDQ2PS xmm0, [rbp-48]
+	CVTDQ2PS xmm1, [rbp-32]
+	CVTDQ2PS xmm2, [rbp-16]
 
 	MOVAPS xmm3, [rel col1]
 	MOVAPS xmm4, [rel col2]
@@ -36,13 +39,15 @@ sepia_one:
 	addps xmm0, xmm3
 	;; xmm0 = b1|g1|r1|b2
 	;; FIXME saturatio
+
 	CVTPS2DQ xmm0, xmm0
-	movdqa [rsi], xmm0
+	pop rsi
+	pop rdi
 	xchg rsi, rdi
+	movdqa [rdi], xmm0
 	call convert_from_b4g4r4
 	;; FIXME: ignore 3/4 pixels
 	mov rax, 0x4
-	mov rsp, rbp
-	pop rbp
+	leave
 	ret
 
