@@ -5,10 +5,19 @@ extern convert_from_b4g4r4
 
 section .data
 
-col1: dd 0.393,0.349,0.272,0.393
-col2: dd 0.769,0.686,0.168,0.768
-col3: dd 0.189,0.168,0.131,0.189
+cols:
 
+	dd 0.393,0.349,0.272,0.393	;round 1
+	dd 0.769,0.686,0.543,0.769
+	dd 0.189,0.168,0.131,0.189
+
+	dd 0.349,0.272,0.393,0.349	;round 2
+	dd 0.686,0.543,0.769,0.686
+	dd 0.168,0.131,0.189,0.168
+
+	dd 0.272,0.393,0.349,0.272	;round 3
+	dd 0.543,0.769,0.686,0.543
+	dd 0.131,0.189,0.168,0.131
 section .text
 
 sepia_one:
@@ -17,6 +26,8 @@ sepia_one:
 	sub rsp, 96
 	mov rsi, rbp
 	sub rsi, 48
+	lea rbx, [rel cols]
+loop:
 	push rdi
 	push rsi
 	call convert_to_b4g4r4
@@ -47,7 +58,7 @@ sepia_one:
 	movdqa [rdi], xmm0
 	call convert_from_b4g4r4
 	;; FIXME: ignore 3/4 pixels
-	mov rax, 0x4
+	mov rax, 0x16
 	leave
 	ret
 
