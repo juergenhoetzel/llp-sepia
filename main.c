@@ -29,8 +29,6 @@ int main(int argc, char **argv) {
   }
   struct rusage ru;
   struct timeval start, end;
-  getrusage(RUSAGE_SELF, &ru);
-  start = ru.ru_utime;
 
   SDL_PixelFormat *format = SDL_AllocFormat(SDL_PIXELFORMAT_RGB24);
   image = SDL_ConvertSurface(in_image, format, 0);
@@ -41,6 +39,8 @@ int main(int argc, char **argv) {
   };
   SDL_LockSurface(image);
   pixel *p = (pixel *)image->pixels;
+  getrusage(RUSAGE_SELF, &ru);
+  start = ru.ru_utime;
   for (int i = 0; i < image->w * image->h;) {
     i += sepia_one(p + i);
   }
