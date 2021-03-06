@@ -21,8 +21,8 @@ void convert_to_b4g4r4(pixel *src, uint32_t dst[12]) {
 
 void convert_from_b4g4r4(uint32_t src[12], pixel *dst) {
   /* b */
-  dst[0].b = src[0];
-  dst[0].g = src[1];
-  dst[0].r = src[2];
-  dst[3].b = src[3];
+  dst[0].b = src[0] > 255 ? 255 : src[0];
+  dst[0].g = src[1] > 255 ? 255 : src[1];
+  dst[0].r = src[2] > 255 ? 255 : src[2];
+  dst[3].b = src[3] > 255 ? 255 : src[3];
 }
