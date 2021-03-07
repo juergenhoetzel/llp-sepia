@@ -1,6 +1,5 @@
 global sepia_one
 
-extern convert_to_b4g4r4
 extern convert_from_b4g4r4
 
 section .data
@@ -23,6 +22,31 @@ saturation:
 	dd 255.0,255.0,255.0,255.0
 section .text
 
+	;; convert one pixel (3 bytes)
+convert_to_b4g4r4:
+	;; b
+	movzx eax, byte [rdi]
+	mov [rsi], eax
+	mov [rsi+1*4], eax
+	mov [rsi+2*4], eax
+	movzx eax, byte [rdi+1*3]
+	mov [rsi+3*4], eax
+	;; g
+	movzx eax, byte [rdi+1]
+	mov [rsi+4*4], eax
+	mov [rsi+5*4], eax
+	mov [rsi+6*4], eax
+	movzx eax, byte [rdi+1+1*3]
+	mov [rsi+7*4], eax
+	;; r
+	movzx eax, byte [rdi+2]
+	mov [rsi+8*4], eax
+	mov [rsi+9*4], eax
+	mov [rsi+10*4], eax
+	movzx eax, byte[rdi+2+1*3]
+	mov [rsi+11*4], eax
+	ret
+
 sepia_one:
 	push rbp
 	mov rbp,rsp
@@ -33,9 +57,6 @@ sepia_one:
 	lea rcx, [rel cols_end]
 	MOVAPS xmm6, [rel saturation]
 loop:
-	push rcx
-	push rdi
-	push rsi
 	call convert_to_b4g4r4
 
 	CVTDQ2PS xmm0, [rbp-48]
@@ -58,8 +79,7 @@ loop:
 	;; FIXME saturatio
 	minps xmm0, xmm6
 	CVTPS2DQ xmm0, xmm0
-	pop rsi
-	pop rdi
+	push rcx
 	push rdi
 	push rsi
 	xchg rsi, rdi
