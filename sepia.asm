@@ -29,7 +29,7 @@ convert_from_b4g4r4:
 	mov al, [rdi+8]
 	mov [rsi+2], al
 	mov al, [rdi+12]
-	mov [rsi+2], al
+	mov [rsi+3], al
 	ret
 	;; convert one pixel (3 bytes) and 1/3 Pixel.
 convert_to_b4g4r4:
