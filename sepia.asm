@@ -65,16 +65,15 @@ sepia_one:
 	lea rbx, [rel cols]
 	lea rcx, [rel cols_end]
 	MOVAPS xmm6, [rel saturation]
+	MOVAPS xmm3, [rbx]
+	MOVAPS xmm4, [rbx+16]
+	MOVAPS xmm5, [rbx+32]
 loop:
 	call convert_to_b4g4r4
 
 	CVTDQ2PS xmm0, [rbp-48]
 	CVTDQ2PS xmm1, [rbp-32]
 	CVTDQ2PS xmm2, [rbp-16]
-
-	MOVAPS xmm3, [rbx]
-	MOVAPS xmm4, [rbx+16]
-	MOVAPS xmm5, [rbx+32]
 
 	mulps xmm0, xmm3
 	mulps xmm1, xmm4
