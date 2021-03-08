@@ -1,7 +1,5 @@
 global sepia_one
 
-extern convert_from_b4g4r4
-
 section .data
 
 cols:
@@ -22,7 +20,18 @@ saturation:
 	dd 255.0,255.0,255.0,255.0
 section .text
 
-	;; convert one pixel (3 bytes)
+	;; convert one pixel (3 bytes) and 1/3 Pixel.
+convert_from_b4g4r4:
+	mov al, [rdi]	 ;just get lowest byte
+	mov [rsi], al
+	mov al, [rdi+4]
+	mov [rsi+1], al
+	mov al, [rdi+8]
+	mov [rsi+2], al
+	mov al, [rdi+12]
+	mov [rsi+2], al
+	ret
+	;; convert one pixel (3 bytes) and 1/3 Pixel.
 convert_to_b4g4r4:
 	;; b
 	movzx eax, byte [rdi]
