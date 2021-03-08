@@ -88,15 +88,10 @@ loop:
 	;; FIXME saturatio
 	minps xmm0, xmm6
 	CVTPS2DQ xmm0, xmm0
-	push rcx
-	push rdi
-	push rsi
 	xchg rsi, rdi
 	movdqa [rdi], xmm0
 	call convert_from_b4g4r4
-	pop rsi
-	pop rdi
-	pop rcx
+	xchg rsi, rdi
 	;; next source
 	add rdi, 4
 	;; next sepia cols
