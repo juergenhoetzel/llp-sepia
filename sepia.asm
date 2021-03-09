@@ -15,6 +15,7 @@ cols:
 	dd 0.272,0.393,0.349,0.272	;round 3
 	dd 0.543,0.769,0.686,0.543
 	dd 0.131,0.189,0.168,0.131
+
 cols_end:
 saturation:
 	dd 255.0,255.0,255.0,255.0
@@ -64,36 +65,38 @@ sepia_one:
 	sub rsi, 48
 	lea rbx, [rel cols]
 	lea rcx, [rel cols_end]
-	MOVAPS xmm6, [rel saturation]
-	MOVAPS xmm3, [rbx]
-	MOVAPS xmm4, [rbx+16]
-	MOVAPS xmm5, [rbx+32]
+	MOVAPS xmm7, [rel saturation]
+	MOVAPS xmm1, [rbx]
+	MOVAPS xmm2, [rbx+16]
+	MOVAPS xmm3, [rbx+32]
 loop:
 	call convert_to_b4g4r4
 
-	CVTDQ2PS xmm0, [rbp-48]
-	CVTDQ2PS xmm1, [rbp-32]
-	CVTDQ2PS xmm2, [rbp-16]
+	CVTDQ2PS xmm4, [rbp-48]
+	CVTDQ2PS xmm5, [rbp-32]
+	CVTDQ2PS xmm6, [rbp-16]
 
-	mulps xmm0, xmm3
-	mulps xmm1, xmm4
-	mulps xmm2, xmm5
+	mulps xmm4, xmm1
+	mulps xmm5, xmm2
+	mulps xmm6, xmm3
 
-	;; FIXME can use ::  DPPS — Dot Product of Packed Single Precision Floating-Point Values
-	addps xmm0, xmm1
-	addps xmm0, xmm2
-	addps xmm0, xmm3
+	addps xmm4, xmm5
+	addps xmm4, xmm6
 	;; xmm0 = b1|g1|r1|b2
 	;; FIXME saturatio
-	minps xmm0, xmm6
-	CVTPS2DQ xmm0, xmm0
+	minps xmm4, xmm7
+	CVTPS2DQ xmm4, xmm4
 	xchg rsi, rdi
-	movdqa [rdi], xmm0
+	movdqa [rdi], xmm4
 	call convert_from_b4g4r4
 	xchg rsi, rdi
 	;; next source
 	add rdi, 4
 	;; next sepia cols
+
+	PSHUFD xmm1, xmm1, 092h
+	PSHUFD xmm2, xmm2, 092h
+	PSHUFD xmm3, xmm3, 092h
 	add rbx, 16*3
 	cmp rbx, rcx
 	jne loop
