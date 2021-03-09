@@ -8,15 +8,7 @@ cols:
 	dd 0.769,0.686,0.543,0.769
 	dd 0.189,0.168,0.131,0.189
 
-	dd 0.349,0.272,0.393,0.349	;round 2
-	dd 0.686,0.543,0.769,0.686
-	dd 0.168,0.131,0.189,0.168
 
-	dd 0.272,0.393,0.349,0.272	;round 3
-	dd 0.543,0.769,0.686,0.543
-	dd 0.131,0.189,0.168,0.131
-
-cols_end:
 saturation:
 	dd 255.0,255.0,255.0,255.0
 section .text
@@ -64,7 +56,7 @@ sepia_one:
 	mov rsi, rbp
 	sub rsi, 48
 	lea rbx, [rel cols]
-	lea rcx, [rel cols_end]
+	mov cl, 4
 	MOVAPS xmm7, [rel saturation]
 	MOVAPS xmm1, [rbx]
 	MOVAPS xmm2, [rbx+16]
@@ -97,8 +89,7 @@ loop:
 	PSHUFD xmm1, xmm1, 092h
 	PSHUFD xmm2, xmm2, 092h
 	PSHUFD xmm3, xmm3, 092h
-	add rbx, 16*3
-	cmp rbx, rcx
+	dec cl
 	jne loop
 
 	mov rax, 0x4
